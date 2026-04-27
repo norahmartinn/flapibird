@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b1d3a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Flappi Pro · Sky Edition</title>
+
+    <!-- Premium gaming typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+    <!-- ===========================
+         GAME SHELL (responsive frame)
+         =========================== -->
+    <div id="game-shell" class="game-shell">
+
+        <!-- Animated CSS sky background (decorative, behind canvas) -->
+        <div class="sky-backdrop" aria-hidden="true">
+            <div class="sky-orb sky-orb--sun"></div>
+            <div class="sky-orb sky-orb--moon"></div>
+            <div class="grain"></div>
+        </div>
+
+        <!-- The canvas where the game renders -->
+        <canvas id="game-canvas" width="480" height="800" aria-label="Flappi Pro game"></canvas>
+
+        <!-- ===========================
+             HUD (in-game)
+             =========================== -->
+        <div id="hud" class="hud" hidden>
+            <div class="hud-top">
+                <button class="icon-btn" id="btn-pause" aria-label="Pausar">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>
+                </button>
+                <div class="hud-score" id="hud-score">0</div>
+                <div class="hud-best">
+                    <span class="hud-best__icon">★</span>
+                    <span id="hud-best-value">0</span>
+                </div>
+            </div>
+
+            <!-- Combo / streak indicator -->
+            <div class="combo" id="combo" aria-hidden="true">
+                <span class="combo__x">×</span><span id="combo-value">2</span>
+                <span class="combo__label">COMBO</span>
+            </div>
+
+            <!-- Achievement toast -->
+            <div class="toast-container" id="toast-container" aria-live="polite"></div>
+        </div>
+
+        <!-- ===========================
+             MAIN MENU
+             =========================== -->
+        <div id="screen-menu" class="screen screen--menu">
+            <div class="logo">
+                <div class="logo__shadow">FLAPPI</div>
+                <h1 class="logo__title">FLAPPI<span class="logo__accent">PRO</span></h1>
+                <div class="logo__sub">SKY · EDITION</div>
+            </div>
+
+            <div class="menu-bird-stage" id="menu-bird-stage">
+                <div class="menu-bird-glow"></div>
+                <img id="menu-bird-img" class="menu-bird" src="assets/bird1.png" alt="">
+            </div>
+
+            <div class="menu-actions">
+                <button class="btn btn--primary" id="btn-play">
+                    <span class="btn__icon">▶</span>
+                    <span>JUGAR</span>
+                </button>
+                <div class="menu-actions__row">
+                    <button class="btn btn--ghost" id="btn-skins" aria-label="Skins">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2l2.39 4.84L20 8l-4 3.9.94 5.5L12 14.77 7.06 17.4 8 11.9 4 8l5.61-1.16L12 2z"/></svg>
+                        <span>Skins</span>
+                    </button>
+                    <button class="btn btn--ghost" id="btn-achievements" aria-label="Logros">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 4h10v3a5 5 0 0 1-10 0V4zm-3 1h2v2a3 3 0 0 1-3-3h1zm15 0h1a3 3 0 0 1-3 3V5h2zm-7 11a4 4 0 0 0 4-4h-8a4 4 0 0 0 4 4zm-3 2h6v2H8v2h8v-2h-2v-2H9z"/></svg>
+                        <span>Logros</span>
+                    </button>
+                    <button class="btn btn--ghost" id="btn-settings" aria-label="Ajustes">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19.43 12.98a7.84 7.84 0 0 0 0-1.96l2.11-1.65a.5.5 0 0 0 .12-.64l-2-3.46a.5.5 0 0 0-.6-.22l-2.49 1a7.7 7.7 0 0 0-1.7-.99l-.38-2.65A.5.5 0 0 0 14 2h-4a.5.5 0 0 0-.49.41l-.38 2.65c-.6.24-1.17.57-1.7.99l-2.49-1a.5.5 0 0 0-.6.22l-2 3.46a.5.5 0 0 0 .12.64l2.11 1.65a7.84 7.84 0 0 0 0 1.96l-2.11 1.65a.5.5 0 0 0-.12.64l2 3.46a.5.5 0 0 0 .6.22l2.49-1c.53.42 1.1.75 1.7.99l.38 2.65A.5.5 0 0 0 10 22h4a.5.5 0 0 0 .49-.41l.38-2.65c.6-.24 1.17-.57 1.7-.99l2.49 1a.5.5 0 0 0 .6-.22l2-3.46a.5.5 0 0 0-.12-.64l-2.11-1.65zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+                        <span>Ajustes</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="menu-foot">
+                <span>Toca · Espacio · Click para volar</span>
+            </div>
+        </div>
+
+        <!-- ===========================
+             SKINS SCREEN
+             =========================== -->
+        <div id="screen-skins" class="screen screen--panel" hidden>
+            <header class="panel-head">
+                <button class="icon-btn icon-btn--back" data-back-to="menu" aria-label="Volver">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <h2>SKINS</h2>
+                <div class="panel-head__hint">Elige tu pájaro</div>
+            </header>
+            <div class="skins-grid" id="skins-grid"></div>
+        </div>
+
+        <!-- ===========================
+             ACHIEVEMENTS SCREEN
+             =========================== -->
+        <div id="screen-achievements" class="screen screen--panel" hidden>
+            <header class="panel-head">
+                <button class="icon-btn icon-btn--back" data-back-to="menu" aria-label="Volver">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <h2>LOGROS</h2>
+                <div class="panel-head__hint" id="achievements-progress">0 / 0</div>
+            </header>
+            <div class="achievements-list" id="achievements-list"></div>
+        </div>
+
+        <!-- ===========================
+             SETTINGS SCREEN
+             =========================== -->
+        <div id="screen-settings" class="screen screen--panel" hidden>
+            <header class="panel-head">
+                <button class="icon-btn icon-btn--back" data-back-to="menu" aria-label="Volver">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <h2>AJUSTES</h2>
+                <div class="panel-head__hint">v1.0</div>
+            </header>
+            <div class="settings-list">
+                <label class="setting-row">
+                    <div class="setting-row__label">
+                        <span class="setting-row__title">Música</span>
+                        <span class="setting-row__sub">Banda sonora ambiente</span>
+                    </div>
+                    <input type="checkbox" id="set-music" class="switch">
+                </label>
+                <label class="setting-row">
+                    <div class="setting-row__label">
+                        <span class="setting-row__title">Efectos de sonido</span>
+                        <span class="setting-row__sub">Saltos, puntos, golpes</span>
+                    </div>
+                    <input type="checkbox" id="set-sfx" class="switch">
+                </label>
+                <label class="setting-row">
+                    <div class="setting-row__label">
+                        <span class="setting-row__title">Vibración</span>
+                        <span class="setting-row__sub">Feedback háptico (móvil)</span>
+                    </div>
+                    <input type="checkbox" id="set-vibe" class="switch">
+                </label>
+                <label class="setting-row">
+                    <div class="setting-row__label">
+                        <span class="setting-row__title">Reducir efectos</span>
+                        <span class="setting-row__sub">Menos partículas, mejor rendimiento</span>
+                    </div>
+                    <input type="checkbox" id="set-low" class="switch">
+                </label>
+                <label class="setting-row">
+                    <div class="setting-row__label">
+                        <span class="setting-row__title">Modo noche permanente</span>
+                        <span class="setting-row__sub">Cielo nocturno desde el inicio</span>
+                    </div>
+                    <input type="checkbox" id="set-night" class="switch">
+                </label>
+                <button class="btn btn--ghost btn--danger" id="btn-reset-data">Borrar datos guardados</button>
+            </div>
+        </div>
+
+        <!-- ===========================
+             TUTORIAL OVERLAY
+             =========================== -->
+        <div id="screen-tutorial" class="screen screen--tutorial" hidden>
+            <div class="tutorial-card">
+                <div class="tutorial-icon">
+                    <div class="tap-ring"></div>
+                    <div class="tap-dot"></div>
+                </div>
+                <div class="tutorial-text">
+                    <h3>TOCA PARA VOLAR</h3>
+                    <p>Esquiva los tubos · Suma puntos · Bate tu récord</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===========================
+             COUNTDOWN OVERLAY
+             =========================== -->
+        <div id="screen-countdown" class="screen screen--countdown" hidden>
+            <div class="countdown" id="countdown-number">3</div>
+        </div>
+
+        <!-- ===========================
+             PAUSE SCREEN
+             =========================== -->
+        <div id="screen-pause" class="screen screen--pause" hidden>
+            <div class="pause-card">
+                <h2>PAUSA</h2>
+                <button class="btn btn--primary" id="btn-resume">CONTINUAR</button>
+                <button class="btn btn--ghost" id="btn-restart-from-pause">REINICIAR</button>
+                <button class="btn btn--ghost" id="btn-menu-from-pause">SALIR AL MENÚ</button>
+            </div>
+        </div>
+
+        <!-- ===========================
+             GAME OVER SCREEN
+             =========================== -->
+        <div id="screen-gameover" class="screen screen--gameover" hidden>
+            <div class="gameover-card">
+                <div class="gameover-banner">
+                    <span class="gameover-banner__text">GAME OVER</span>
+                </div>
+
+                <div class="score-board">
+                    <div class="score-board__row">
+                        <span class="score-board__label">SCORE</span>
+                        <span class="score-board__value" id="go-score">0</span>
+                    </div>
+                    <div class="score-board__row">
+                        <span class="score-board__label">BEST</span>
+                        <span class="score-board__value score-board__value--best" id="go-best">0</span>
+                    </div>
+                    <div class="score-board__medal" id="go-medal">
+                        <div class="medal" id="go-medal-shape" data-tier="none">
+                            <div class="medal__shine"></div>
+                            <div class="medal__ribbon"></div>
+                        </div>
+                        <div class="medal-label" id="go-medal-label">SIGUE INTENTANDO</div>
+                    </div>
+                </div>
+
+                <div class="gameover-actions">
+                    <button class="btn btn--primary btn--big" id="btn-retry">
+                        <span class="btn__icon">↻</span>
+                        <span>REINTENTAR</span>
+                    </button>
+                    <div class="gameover-actions__row">
+                        <button class="btn btn--ghost" id="btn-go-menu">MENÚ</button>
+                        <button class="btn btn--ghost" id="btn-go-share">COMPARTIR</button>
+                    </div>
+                </div>
+
+                <div class="gameover-stats" id="go-stats"></div>
+            </div>
+        </div>
+
+        <!-- ===========================
+             LOADING SCREEN
+             =========================== -->
+        <div id="screen-loading" class="screen screen--loading">
+            <div class="loader">
+                <div class="loader__bird">
+                    <div class="loader__wing loader__wing--l"></div>
+                    <div class="loader__body"></div>
+                    <div class="loader__wing loader__wing--r"></div>
+                </div>
+                <div class="loader__bar"><div class="loader__fill" id="loader-fill"></div></div>
+                <div class="loader__label">CARGANDO</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===========================
+         JS MODULES (load order matters)
+         =========================== -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/entities.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
