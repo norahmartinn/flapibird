@@ -603,13 +603,25 @@
         render() {
             const ctx = this.ctx;
 
-            // Reset transform, clear with sky color (alpha:false canvas)
+            // 1. Reset transform and CLEAR THE ENTIRE CANVAS in physical pixels.
+            //    Critical: when the canvas aspect ratio doesn't match LOGICAL_W/H,
+            //    only a sub-rect gets re-drawn each frame. Without this clear, the
+            //    leftover area shows uninitialized buffer garbage.
             ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.fillStyle = '#0a0e1f';
+            ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // Scale to render coordinates and apply screen shake
-            const shakeX = this.shakeMagnitude ? (Math.random() - 0.5) * this.shakeMagnitude : 0;
-            const shakeY = this.shakeMagnitude ? (Math.random() - 0.5) * this.shakeMagnitude : 0;
-            ctx.setTransform(this.renderScale, 0, 0, this.renderScale, shakeX, shakeY);
+            // 2. Compute the centered "letterbox" offset so the logical area
+            //    (LOGICAL_W x LOGICAL_H) sits in the middle of the canvas.
+            const drawW = this.LOGICAL_W * this.renderScale;
+            const drawH = this.LOGICAL_H * this.renderScale;
+            const offsetX = (this.canvas.width  - drawW) / 2;
+            const offsetY = (this.canvas.height - drawH) / 2;
+
+            // 3. Apply uniform scale + centering + screen shake.
+            const shakeX = this.shakeMagnitude ? (Math.random() - 0.5) * this.shakeMagnitude * this.renderScale : 0;
+            const shakeY = this.shakeMagnitude ? (Math.random() - 0.5) * this.shakeMagnitude * this.renderScale : 0;
+            ctx.setTransform(this.renderScale, 0, 0, this.renderScale, offsetX + shakeX, offsetY + shakeY);
 
             // Background
             this.background.render(ctx);
